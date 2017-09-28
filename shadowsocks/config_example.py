@@ -99,3 +99,6 @@ LOG_FILE = 'shadowsocks.log'
 # LOG_FORMAT = '%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s'
 LOG_FORMAT = '%(asctime)s %(levelname)s %(message)s'
 LOG_DATE_FORMAT = '%b %d %H:%M:%S'
+
+# KCP Turn 配置
+KCP_TURN_PATH = '/root/kcpturn/server_linux_amd64'
