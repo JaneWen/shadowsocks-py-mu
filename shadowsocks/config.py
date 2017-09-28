@@ -15,21 +15,21 @@ CONFIG_VERSION = '20160623-2'
 API_ENABLED = True
 
 # Database Config
-MYSQL_HOST = 'mengsky.net'
+MYSQL_HOST = 'wdvpn.com'
 MYSQL_PORT = 3306
-MYSQL_USER = 'root'
-MYSQL_PASS = 'root'
-MYSQL_DB = 'shadowsocks'
+MYSQL_USER = 'wenjian'
+MYSQL_PASS = 'wjlhm@1314'
+MYSQL_DB = 'ss'
 # USUALLY this variable do not need to be changed
 MYSQL_USER_TABLE = 'user'
 # This is also the timeout of connecting to the API
 MYSQL_TIMEOUT = 30
 
 # Shadowsocks MultiUser API Settings
-API_URL = 'http://domain/mu'
+API_URL = 'http://wdvpn.com/mu'
 # API Key (you can find this in the .env file if you are using SS-Panel V3)
-API_PASS = 'mupass'
-NODE_ID = '1'
+API_PASS = 'wjlhm1314'
+NODE_ID = '2'
 
 # Time interval between 2 pulls from the database or API
 CHECKTIME = 30
@@ -93,9 +93,12 @@ SS_FORBIDDEN_IP = []
 LOG_ENABLE = True
 SS_VERBOSE = False
 # Available Log Level: logging.NOTSET|DEBUG|INFO|WARNING|ERROR|CRITICAL
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.ERROR
 LOG_FILE = 'shadowsocks.log'
 # The following format is the one suggested for debugging
 # LOG_FORMAT = '%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s'
 LOG_FORMAT = '%(asctime)s %(levelname)s %(message)s'
 LOG_DATE_FORMAT = '%b %d %H:%M:%S'
+
+# KCP_TURN 
+KCP_TURN_PATH = '/root/shadowsocks-py-mu/server_linux_amd64'
