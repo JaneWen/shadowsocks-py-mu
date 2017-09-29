@@ -71,7 +71,15 @@ class DbTransfer(object):
          data = ''
         (status,pid) = commands.getstatusoutput(('ps -ef | grep %s -l :%d | grep -v grep | awk \'{print $2}\'' % config.KCP_TURN_PATH, port))
         if "" !=pid:
-            os.popen(('kill -9 %s' % pid)
+            os.popen(('kill -9 %s' % pid))
+        return data
+
+    @staticmethod
+    def kill_kcpturn_port_by_ss_port(port):
+         data = ''
+        (status,pid) = commands.getstatusoutput(('ps -ef | grep 127.0.0.1:%d | grep -v grep | awk \'{print $2}\'' %  port)
+        if "" !=pid:
+            os.popen(('kill -9 %s' % pid))
         return data
 
     @staticmethod
@@ -100,11 +108,9 @@ class DbTransfer(object):
             users = DbTransfer.pull_api_user()
             for port in dt_transfer.keys():
                 user = None
-                kcpturn_port = None
                 for result in users:
                     if str(result[0]) == port:
                         user = result[9]
-                        kcpturn_port = result[11]
                         break
                 if not user:
                     logging.warn('U[%s] User Not Found', port)
@@ -115,7 +121,7 @@ class DbTransfer(object):
                             'U[%s] Server has been stopped: user is removed' % port)
                         DbTransfer.send_command(
                             'remove: {"server_port":%s}' % port)
-                        DbTransfer.kill_kcpturn_port(kcpturn_port])
+                        DbTransfer.kill_kcpturn_port_by_ss_port(port])
                     continue
                 if config.SS_VERBOSE:
                     logging.info('U[%s] User ID Obtained:%s' % (port, user))
@@ -208,21 +214,24 @@ class DbTransfer(object):
                         'U[%d] Server has been stopped: user is disabled' % row[0])
                     DbTransfer.send_command(
                         'remove: {"server_port":%d}' % row[0])
-                    DbTransfer.kill_kcpturn_port(row[11])
+                    if row[11] > 29900 :
+                        DbTransfer.kill_kcpturn_port(row[11])
                 elif row[1] + row[2] >= row[3]:
                     # stop user that exceeds bandwidth limit
                     logging.info(
                         'U[%d] Server has been stopped: bandwith exceeded' % row[0])
                     DbTransfer.send_command(
                         'remove: {"server_port":%d}' % row[0])
-                    DbTransfer.kill_kcpturn_port(row[11])
+                    if row[11] > 29900 :    
+                        DbTransfer.kill_kcpturn_port(row[11])
                 elif server['password'] != row[4]:
                     # password changed
                     logging.info(
                         'U[%d] Server is restarting: password is changed' % row[0])
                     DbTransfer.send_command(
                         'remove: {"server_port":%d}' % row[0])
-                    DbTransfer.kill_kcpturn_port(row[11])
+                    if row[11] > 29900 : 
+                        DbTransfer.kill_kcpturn_port(row[11])
                 else:
                     if not config.CUSTOM_METHOD:
                         row[7] = config.SS_METHOD
@@ -232,7 +241,8 @@ class DbTransfer(object):
                             'U[%d] Server is restarting: encryption method is changed' % row[0])
                         DbTransfer.send_command(
                             'remove: {"server_port":%d}' % row[0])
-                        DbTransfer.kill_kcpturn_port(row[11])
+                        if row[11] > 29900 :
+                            DbTransfer.kill_kcpturn_port(row[11])
                         
             else:
                 if (row[5] == 1 or row[5] == "1") and row[6] == 1 and row[1] + row[2] < row[3]:
@@ -241,7 +251,7 @@ class DbTransfer(object):
                     DbTransfer.send_command(
                         'add: {"server_port": %d, "password":"%s", "method":"%s", "email":"%s"}' % (row[0], row[4], row[7], row[8]))
                     if row[10] > 0:
-                        DbTransfer.send_kcpturn_command('%s -l :%d -t 127.0.0.1:%d -key test -mtu 1400 -sndwnd 2048 -rcvwnd 2048 -mode fast2' % (config.KCP_TURN_PATH, drow[11], row[0]))
+                        DbTransfer.send_kcpturn_command('%s -l :%d -t 127.0.0.1:%d -key test -mtu 1400 -sndwnd 2048 -rcvwnd 2048 -mode fast2' % (config.KCP_TURN_PATH, row[11], row[0]))
                     if config.MANAGE_BIND_IP != '127.0.0.1':
                         logging.info(
                             'U[%s] Server Started with password [%s] and method [%s]' % (row[0], row[4], row[7]))
