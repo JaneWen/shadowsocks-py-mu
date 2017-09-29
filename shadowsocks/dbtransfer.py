@@ -68,17 +68,17 @@ class DbTransfer(object):
 
     @staticmethod
     def kill_kcpturn_port(port):
-         data = ''
-        (status,pid) = commands.getstatusoutput(('ps -ef | grep %s -l :%d | grep -v grep | awk \'{print $2}\'' % config.KCP_TURN_PATH, port))
-        if "" !=pid:
+        data = ''
+        (status,pid) = commands.getstatusoutput("ps -ef | grep %s -l :%d | grep -v grep | awk '{print $2}'" % (config.KCP_TURN_PATH,port))
+        if pid !='' :
             os.popen(('kill -9 %s' % pid))
         return data
 
     @staticmethod
     def kill_kcpturn_port_by_ss_port(port):
-         data = ''
-        (status,pid) = commands.getstatusoutput(('ps -ef | grep 127.0.0.1:%d | grep -v grep | awk \'{print $2}\'' %  port)
-        if "" !=pid:
+        data = ''
+        (status,pid) = commands.getstatusoutput("ps -ef | grep 127.0.0.1:%d | grep -v grep | awk '{print $2}'" %  port)
+        if '' != pid:
             os.popen(('kill -9 %s' % pid))
         return data
 
@@ -121,7 +121,7 @@ class DbTransfer(object):
                             'U[%s] Server has been stopped: user is removed' % port)
                         DbTransfer.send_command(
                             'remove: {"server_port":%s}' % port)
-                        DbTransfer.kill_kcpturn_port_by_ss_port(port])
+                        DbTransfer.kill_kcpturn_port_by_ss_port(port)
                     continue
                 if config.SS_VERBOSE:
                     logging.info('U[%s] User ID Obtained:%s' % (port, user))
