@@ -21,7 +21,6 @@ import time
 import socket
 import config
 import json
-import os
 import commands
 import urllib
 # TODO: urllib2 does not exist in python 3.5+
@@ -63,7 +62,8 @@ class DbTransfer(object):
     @staticmethod
     def send_kcpturn_command(cmd):
         data = ''
-        os.popen(cmd)
+        out=commands.getoutput(cmd)
+        logging.info('start kcp %s' % out)
         return data
 
     @staticmethod
@@ -71,7 +71,7 @@ class DbTransfer(object):
         data = ''
         (status,pid) = commands.getstatusoutput("ps -ef | grep %s -l :%d | grep -v grep | awk '{print $2}'" % (config.KCP_TURN_PATH,port))
         if pid !='' :
-            os.popen(('kill -9 %s' % pid))
+            output=commands.getoutput(('kill -9 %s' % pid))
         return data
 
     @staticmethod
@@ -79,7 +79,7 @@ class DbTransfer(object):
         data = ''
         (status,pid) = commands.getstatusoutput("ps -ef | grep 127.0.0.1:%d | grep -v grep | awk '{print $2}'" %  port)
         if '' != pid:
-            os.popen(('kill -9 %s' % pid))
+            output=commands.getoutput(('kill -9 %s' % pid))
         return data
 
     @staticmethod

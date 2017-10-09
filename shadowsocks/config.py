@@ -15,7 +15,7 @@ CONFIG_VERSION = '20160623-2'
 API_ENABLED = True
 
 # Database Config
-MYSQL_HOST = 'wdvpn.com'
+MYSQL_HOST = '172.104.122.91'
 MYSQL_PORT = 3306
 MYSQL_USER = 'wenjian'
 MYSQL_PASS = 'wjlhm@1314'
@@ -26,7 +26,7 @@ MYSQL_USER_TABLE = 'user'
 MYSQL_TIMEOUT = 30
 
 # Shadowsocks MultiUser API Settings
-API_URL = 'http://wdvpn.com/mu'
+API_URL = 'http://172.104.122.91:8080/mu'
 # API Key (you can find this in the .env file if you are using SS-Panel V3)
 API_PASS = 'wjlhm1314'
 NODE_ID = '2'
@@ -93,7 +93,7 @@ SS_FORBIDDEN_IP = []
 LOG_ENABLE = True
 SS_VERBOSE = False
 # Available Log Level: logging.NOTSET|DEBUG|INFO|WARNING|ERROR|CRITICAL
-LOG_LEVEL = logging.ERROR
+LOG_LEVEL = logging.INFO
 LOG_FILE = 'shadowsocks.log'
 # The following format is the one suggested for debugging
 # LOG_FORMAT = '%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s'
