@@ -91,7 +91,7 @@ SS_FORBIDDEN_IP = []
 # Logging and Debugging Settings
 # --------------------------
 LOG_ENABLE = True
-SS_VERBOSE = False
+SS_VERBOSE = True
 # Available Log Level: logging.NOTSET|DEBUG|INFO|WARNING|ERROR|CRITICAL
 LOG_LEVEL = logging.INFO
 LOG_FILE = 'shadowsocks.log'

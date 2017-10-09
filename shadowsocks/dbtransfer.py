@@ -21,6 +21,7 @@ import time
 import socket
 import config
 import json
+import os
 import commands
 import urllib
 # TODO: urllib2 does not exist in python 3.5+
@@ -62,24 +63,19 @@ class DbTransfer(object):
     @staticmethod
     def send_kcpturn_command(cmd):
         data = ''
-        out=commands.getoutput(cmd)
-        logging.info('start kcp %s' % out)
+        os.system('nohup %s &' % cmd)
         return data
 
     @staticmethod
     def kill_kcpturn_port(port):
         data = ''
-        (status,pid) = commands.getstatusoutput("ps -ef | grep %s -l :%d | grep -v grep | awk '{print $2}'" % (config.KCP_TURN_PATH,port))
-        if pid !='' :
-            output=commands.getoutput(('kill -9 %s' % pid))
+        commands.getstatusoutput("ps -ef | grep %s -l :%d | grep -v grep | kill -QUIT '{print $2}'" % (config.KCP_TURN_PATH,port))
         return data
 
     @staticmethod
     def kill_kcpturn_port_by_ss_port(port):
         data = ''
-        (status,pid) = commands.getstatusoutput("ps -ef | grep 127.0.0.1:%d | grep -v grep | awk '{print $2}'" %  port)
-        if '' != pid:
-            output=commands.getoutput(('kill -9 %s' % pid))
+        commands.getstatusoutput("ps -ef | grep 127.0.0.1:%d | grep -v grep | kill -QUIT '{print $2}'" %  port)
         return data
 
     @staticmethod
@@ -90,6 +86,8 @@ class DbTransfer(object):
         cli.sendto('transfer: {}', (config.MANAGE_BIND_IP, config.MANAGE_PORT))
         while True:
             data, addr = cli.recvfrom(1500)
+            if config.SS_VERBOSE:
+                logging.info('data:%s' % data)
             if data == 'e':
                 break
             data = json.loads(data)
@@ -100,15 +98,20 @@ class DbTransfer(object):
 
     def push_db_all_user(self):
         dt_transfer = self.get_servers_transfer()
-
+        if config.SS_VERBOSE:
+            logging.info('dt_transfer: %s' % dt_transfer.keys())
         if config.API_ENABLED:
             i = 0
             if config.SS_VERBOSE:
                 logging.info('api upload: pushing transfer statistics')
             users = DbTransfer.pull_api_user()
             for port in dt_transfer.keys():
+                if config.SS_VERBOSE:
+                    logging.info('port in dt_transfer:%d' % port)
                 user = None
                 for result in users:
+                    if config.SS_VERBOSE:
+                        logging.info('result %s' % result)
                     if str(result[0]) == port:
                         user = result[9]
                         break
@@ -342,6 +345,6 @@ class DbTransfer(object):
                     user['email'],
                     user['id'],
                     user['level'],
-                    user['kcpturn_port'],
+                    user['kcpturn_port']
                 ])
         return rows
